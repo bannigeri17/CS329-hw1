@@ -1,0 +1,33 @@
+ontology = {
+  "ontology":{
+    "brands":
+    [
+      "playstation",
+      "nintendo",
+      "xbox",
+      "PC"
+    ],
+    "playstation":
+    [
+      "ps2",
+      "ps3",
+      "ps4",
+      "psp"
+    ],
+    "nintendo":
+    [
+      "switch",
+      "wii",
+      "gameboy"
+    ],
+    "xbox":
+    [
+      "360",
+      "one"
+    ],
+    "PC":
+    [
+
+    ]
+  }
+}
