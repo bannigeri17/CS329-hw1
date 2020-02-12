@@ -2,12 +2,17 @@
   "ontology":{
     "brands":
     [
+      "atari",
       "playstation",
       "nintendo",
       "xbox",
-      "PC"
+      "PC",
+      "Sega"
     ],
-    "playstation":
+    "atari": [
+      "2600"
+    ],
+    "playstation": 
     [
       "ps2",
       "ps3",
@@ -17,6 +22,10 @@
     "nintendo":
     [
       "switch",
+      "NES",
+      "SNES",
+      "DS",
+      "N64",
       "wii",
       "gameboy"
     ],
@@ -28,6 +37,27 @@
     "PC":
     [
 
+    ],
+    "Sega": [
+      "Genesis",
+      "Dreamcast"
+    ],
+    "gameboy":
+    [
+      "color",
+      "advance",
+
+    ],
+    "DS":
+    [
+      "3DS",
+      "2DS",
+      "DSi",
+      "DS"
+    ],
+    "Genesis": [
+      "Genesis",
+      "Megadrive"
     ]
   }
 }
