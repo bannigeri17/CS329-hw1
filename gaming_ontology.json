@@ -6,8 +6,8 @@
       "playstation",
       "nintendo",
       "xbox",
-      "PC",
-      "Sega"
+      "pc",
+      "sega"
     ],
     "atari": [
       "2600"
@@ -22,10 +22,10 @@
     "nintendo":
     [
       "switch",
-      "NES",
-      "SNES",
-      "DS",
-      "N64",
+      "nes",
+      "snes",
+      "ds",
+      "n64",
       "wii",
       "gameboy"
     ],
@@ -34,13 +34,13 @@
       "360",
       "one"
     ],
-    "PC":
+    "pc":
     [
 
     ],
-    "Sega": [
-      "Genesis",
-      "Dreamcast"
+    "sega": [
+      "genesis",
+      "dreamcast"
     ],
     "gameboy":
     [
@@ -48,16 +48,16 @@
       "advance",
 
     ],
-    "DS":
+    "ds":
     [
-      "3DS",
-      "2DS",
-      "DSi",
-      "DS"
+      "3ds",
+      "2ds",
+      "dsi",
+      "ds"
     ],
-    "Genesis": [
-      "Genesis",
-      "Megadrive"
+    "genesis": [
+      "genesis",
+      "megadrive"
     ]
   }
 }
