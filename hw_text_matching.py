@@ -1,7 +1,22 @@
-from emora_stdm import KnowledgeBase, DialogueFlow
-from enum import Enum, auto
-import json
+from typing import Dict, Any, List
 
+from emora_stdm import KnowledgeBase, DialogueFlow, Macro, Ngrams
+from enum import Enum, auto
+import json, csv
+
+vg_dict = {}
+with open("vgsales.csv", newline='') as csvfile:
+    file_reader = csv.reader(csvfile, delimiter=',', quotechar='|')
+    for row in file_reader:
+        key = row[1].lower()
+        vg_dict[key] = row[2:]
+
+class FAV_GAME(Macro):
+
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+
+        if 'device' in vars:
+            return our_favorite[vars['device']]
 
 # TODO: Update the State enum as needed
 class State(Enum):
@@ -36,6 +51,7 @@ class State(Enum):
 
 
 # TODO: create the ontology as needed
+
 #with open("gaming_ontology.json") as json_file:
 #    ontology = json.load(json_file)
 #ontology = json.load('gaming_ontology.json')
@@ -134,7 +150,7 @@ df.add_system_transition(State.SEGA, State.QUES1b, '"Is there anything you like 
 df.add_user_transition(State.QUES1b, State.ANS1b, '-{no,not really, nah}')
 df.add_user_transition(State.QUES1b, State.QUES2, '{no,not really, no}')
 
-df.add_user_transition(State.QUES2)
+df.add_system_transition(State.QUES2,State.ANS2, "What's your favorite game to play on your $device , mine is #FAV_GAME")
 
 df.set_error_successor(State.INIT_PROMPT, State.ERR)
 # TODO: create your own dialogue manager
