@@ -36,7 +36,9 @@
     ],
     "pc":
     [
-
+      "laptop",
+      "computer",
+      "desktop"
     ],
     "sega": [
       "genesis",
