@@ -942,7 +942,7 @@ Rank,Name,Platform,Year,Genre,Publisher,NA_Sales,EU_Sales,JP_Sales,Other_Sales,G
 942,Gran Turismo Concept 2001 Tokyo,PS2,2001,Racing,Unknown,0,1.1,0.42,0.33,1.84
 943,Demon's Souls,PS3,2009,Role-Playing,Namco Bandai Games,0.97,0.34,0.35,0.18,1.84
 944,NCAA Football 06,PS2,2005,Sports,Electronic Arts,1.53,0.05,0,0.25,1.84
-945,"Hey You, Pikachu!",N64,1998,Simulation,Nintendo,0.83,0.06,0.93,0,1.83
+945,"Hey You Pikachu!",N64,1998,Simulation,Nintendo,0.83,0.06,0.93,0,1.83
 946,2 Games in 1: Sonic Advance & ChuChu Rocket!,GBA,2005,Misc,THQ,1.31,0.49,0,0.03,1.83
 947,World of Warcraft: Mists of Pandaria,PC,2012,Role-Playing,Activision,0.84,0.76,0,0.23,1.83
 948,Jet Moto,PS,1996,Racing,Sony Computer Entertainment,1.33,0.4,0.03,0.07,1.83
@@ -1090,7 +1090,7 @@ Rank,Name,Platform,Year,Genre,Publisher,NA_Sales,EU_Sales,JP_Sales,Other_Sales,G
 1090,Star Wars: Battlefront II,XB,2005,Shooter,Activision,1.22,0.39,0,0.06,1.67
 1091,Disney's DuckTales,NES,1989,Platform,Capcom,0.91,0.3,0.42,0.04,1.67
 1092,Tony Hawk's Pro Skater 3,PS,2001,Sports,Activision,1.09,0.49,0.02,0.07,1.67
-1093,"Monsters, Inc.",GBA,2001,Adventure,THQ,0.59,0.95,0.03,0.1,1.67
+1093,"Monsters Inc.",GBA,2001,Adventure,THQ,0.59,0.95,0.03,0.1,1.67
 1094,StarCraft II: Heart of the Swarm,PC,2013,Strategy,Activision,0.82,0.65,0,0.19,1.67
 1095,PGR: Project Gotham Racing 2,XB,2003,Racing,Microsoft Game Studios,0.97,0.59,0.04,0.07,1.67
 1096,Spy Hunter,PS2,2001,Racing,Midway Games,1.13,0.32,0,0.22,1.67
@@ -1625,7 +1625,7 @@ Rank,Name,Platform,Year,Genre,Publisher,NA_Sales,EU_Sales,JP_Sales,Other_Sales,G
 1625,Castlevania,NES,1986,Platform,Konami Digital Entertainment,0.54,0.06,0.62,0.01,1.23
 1626,Donkey Kong Country 2,GBA,2004,Platform,Nintendo,0.79,0.27,0.12,0.04,1.23
 1627,Bayonetta,PS3,2009,Action,Sega,0.44,0.41,0.21,0.17,1.23
-1628,"WarioWare, Inc.: Mega MicroGame$",GBA,2003,Puzzle,Nintendo,0.4,0.11,0.7,0.02,1.23
+1628,"WarioWare Inc.: Mega MicroGame$",GBA,2003,Puzzle,Nintendo,0.4,0.11,0.7,0.02,1.23
 1629,Star Wars: Battlefront II,PSP,2005,Shooter,LucasArts,1.05,0.06,0.01,0.11,1.23
 1630,Madden NFL 17,PS4,2016,Sports,Electronic Arts,0.92,0.08,0,0.23,1.23
 1631,Boom Blox,Wii,2008,Puzzle,Electronic Arts,0.72,0.38,0,0.12,1.23
@@ -1832,7 +1832,7 @@ Rank,Name,Platform,Year,Genre,Publisher,NA_Sales,EU_Sales,JP_Sales,Other_Sales,G
 1832,Spider-Man 2,XB,2004,Action,Activision,0.82,0.26,0,0.04,1.12
 1833,Counter-Strike,XB,2003,Shooter,Microsoft Game Studios,0.85,0.23,0,0.04,1.11
 1834,Mad Max (2015),PS4,2015,Action,Warner Bros. Interactive Entertainment,0.32,0.58,0.04,0.17,1.11
-1835,"Transformers: The Game (XBox 360, PS2, PS3, Wii & PC Versions)",PS2,2007,Action,Activision,0.63,0.37,0,0.11,1.11
+1835,"Transformers: The Game",PS2,2007,Action,Activision,0.63,0.37,0,0.11,1.11
 1836,GRID,PS3,2008,Racing,Codemasters,0.31,0.57,0.03,0.2,1.11
 1837,Guitar Hero Encore: Rocks The 80s,PS2,2007,Misc,RedOctane,0.92,0.04,0,0.15,1.11
 1838,Sunset Overdrive,XOne,2014,Shooter,Microsoft Game Studios,0.62,0.4,0,0.08,1.11
@@ -16500,7 +16500,7 @@ Rank,Name,Platform,Year,Genre,Publisher,NA_Sales,EU_Sales,JP_Sales,Other_Sales,G
 16501,The Land Before Time: Into the Mysterious Beyond,GBA,2006,Platform,Game Factory,0.01,0,0,0,0.01
 16502,Irotoridori no Sekai: World's End Re-Birth,PSV,2015,Action,HuneX,0,0,0.01,0,0.01
 16503,Satomi Hakkenden: Hachi Tamanoki,PSP,2014,Adventure,Quinrose,0,0,0.01,0,0.01
-16504,"Transformers: War for Cybertron (XBox 360, PS3, & PC Versions)",PC,2010,Shooter,Activision,0.01,0,0,0,0.01
+16504,"Transformers: War for Cybertron",PC,2010,Shooter,Activision,0.01,0,0,0,0.01
 16505,Naraku no Shiro,PS2,2008,Adventure,Nippon Ichi Software,0,0,0.01,0,0.01
 16506,Shinigami to Shoujo,PSP,2011,Adventure,Takuyo,0,0,0.01,0,0.01
 16507,Mystereet,PS2,2006,Adventure,Yeti,0,0,0.01,0,0.01
