@@ -6,7 +6,22 @@ import json, csv
 
 vg_dict = {} #a dictionary mapping a game title to various data points about it, i.e. platform, release year and genre
 sys_favs = {} #a dictionary using vgsales.csv to map platforms to an arbitrary favorite game from that platform
-genre = None
+genre_favs = {} #dictionary similarly arbitrarily mapping a given genre to system's "favorite" game from that genre
+#genre = None
+
+console_dict = { #mapping the names we match for in our program to their equivalent encoding in vgsales.csv
+    'gameboy':'gb',
+    '360' : 'x360',
+    'laptop' : 'pc',
+    'computer' : 'pc',
+    'desktop' : 'pc',
+    'playstation' : 'ps',
+    'advance' : 'gba',
+    'xbox' : 'xb',
+    'one' : 'xone',
+    'genesis' : 'gen',
+    'dreamcast' : 'dc'
+}
 
 with open("vgsales.csv", newline='') as csvfile:
     file_reader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -16,14 +31,18 @@ with open("vgsales.csv", newline='') as csvfile:
         if row[2].lower() not in sys_favs:
             sys_key = row[2].lower()
             sys_favs[sys_key] = row[1].lower()
-
+        if row[4].lower() not in genre_favs:
+            gen_key = row[4].lower()
+            genre_favs[gen_key] = row[1].lower()
 print(sys_favs)
 
 class SYSTEM_FAV(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         if 'device' in vars:
-            if vars['device']  in sys_favs:
+            if vars['device'] in sys_favs:
                 return "? My favorite is " + sys_favs[vars['device']]+"!"
+            elif console_dict[vars['device']] in sys_favs:
+                return "? My favorite is " + console_dict[vars['device']] + "!"
             return "? I don't really have a favorite for that device."
 
 # TODO: Maybe update conversation flow/state transitions so we don't have to do anything complicated with genre classification
@@ -34,6 +53,7 @@ class FAV_GAME_GENRE(Macro):
             if vars['fav_game']  in vg_dict:
                 genre = vg_dict['fav_game']
                 vars['genre'] = genre
+                print("genre: "+genre)
                 return "Do you prefer "+genre+"games?"
             return "Do you have a favorite genre?"
 
@@ -187,11 +207,11 @@ df.add_user_transition(State.ANS3,State.QUES4,"$fav_game=[-{none,dont have one}]
 df.add_user_transition(State.ANS3,State.QUES3b,"[{none,dont have one}]")
 
 df.add_system_transition(State.QUES3b, State.ANS3b, '"Do you have a favorite genre of video game?"')
-df.add_user_transition()
+#df.add_user_transition()
 
 df.add_system_transition(State.QUES4,State.ANS4,"#FAV_GAME_GENRE")
 
-df.add_user_transition(State.ANS4, State.QUES5, "")
+#df.add_user_transition(State.ANS4, State.QUES5, "")
 
 # TODO: CREATE ERROR SUCCESSORS-ENSURE ROBUSTNESS
 df.set_error_successor(State.INIT_PROMPT, State.ERR)
