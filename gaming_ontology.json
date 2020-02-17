@@ -14,6 +14,7 @@
     ],
     "playstation": 
     [
+      "ps",
       "ps2",
       "ps3",
       "ps4",
@@ -36,7 +37,9 @@
     ],
     "pc":
     [
-
+      "laptop",
+      "computer",
+      "desktop"
     ],
     "sega": [
       "genesis",
