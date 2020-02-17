@@ -3,6 +3,7 @@ from typing import Dict, Any, List
 from emora_stdm import KnowledgeBase, DialogueFlow, Macro, Ngrams
 from enum import Enum, auto
 import json, csv
+import videogames
 
 vg_dict = {} #a dictionary mapping a game title to various data points about it, i.e. platform, release year and genre
 sys_favs = {} #a dictionary using vgsales.csv to map platforms to an arbitrary favorite game from that platform
