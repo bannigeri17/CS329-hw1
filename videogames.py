@@ -49,7 +49,10 @@ def get_console_game_time_range(console_name: str) -> (int, int, int):
     return int(min_year), int(max_year), int(max_year - min_year)
 
 
-def get_random_game_from_genre(console_name: str = None, genre: str = None) -> (str, str, str):
+def get_random_game_from_genre(console_name: str = None, genre: str = None, sales_min: float = 0.) -> (str, str, str):
+    """
+    Returns a random game from the dataset (can be used to select a favorite game)
+    """
     if not console_name:
         console_name = df.sample().reset_index()['Platform'][0]
 
@@ -58,6 +61,6 @@ def get_random_game_from_genre(console_name: str = None, genre: str = None) -> (
     if not genre:
         genre = e.sample().reset_index()['Genre'][0]
 
-    name = e.loc[e['Genre'] == genre].sample().reset_index()['Name'][0]
+    name = e.loc[(e['Genre'] == genre) & (e['Global_Sales'] > sales_min)].sample().reset_index()['Name'][0]
 
     return name, console_name, genre
