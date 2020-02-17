@@ -161,6 +161,24 @@ ontology = {
     "genesis": [
       "genesis",
       "megadrive"
+    ],
+    "no": [
+        "no",
+        "nah",
+        "never",
+        "no way",
+        "get out",
+        "nope",
+        "not really"
+    ],
+    "yes": [
+        "yes",
+        "yeah",
+        "yea",
+        "sure",
+        "absolutely",
+        "of course",
+        "ye"
     ]
   }
 }
@@ -171,8 +189,10 @@ df = DialogueFlow(State.START, initial_speaker=DialogueFlow.Speaker.SYSTEM, kb=k
                                                                                                   "FAV_GAME_GENRE":FAV_GAME_GENRE()})
 
 df.add_system_transition(State.START, State.INIT_PROMPT, '"Hi, do you play video games?"')
-df.add_user_transition(State.INIT_PROMPT, State.QUES1, "{yes,yeah}")
+df.add_user_transition(State.INIT_PROMPT, State.QUES1, "[$device=#ONT(yes)]")
+df.add_user_transition(State.INIT_PROMPT, State.QUES1_1, "{$device=#ONT(no)], }")
 
+df.add_system_transition(State.QUES1_1, State.ERR, "I'm sorry to hear that, I'm afraid we can't be friends then.")
 df.add_system_transition(State.QUES1, State.ANS1, '"What do you most often play video games on?"')
 df.add_user_transition(State.ANS1, State.ATARI, "[$device=#ONT(atari)]")
 df.add_user_transition(State.ANS1, State.PLAYSTATION, "[$device={#ONT(playstation),playstation}]")

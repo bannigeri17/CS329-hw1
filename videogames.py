@@ -47,4 +47,3 @@ def get_console_game_time_range(console_name: str) -> (int, int, int):
     max_year = c['Year'].max()[console_name]
     min_year = c['Year'].min()[console_name]
     return int(min_year), int(max_year), int(max_year - min_year)
-
