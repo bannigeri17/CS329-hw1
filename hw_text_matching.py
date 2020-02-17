@@ -98,6 +98,8 @@ class State(Enum):
 
     ERR = auto()
 
+    QUES1b = auto()
+
 
 # TODO: create the ontology as needed
 
@@ -190,9 +192,9 @@ df = DialogueFlow(State.START, initial_speaker=DialogueFlow.Speaker.SYSTEM, kb=k
 
 df.add_system_transition(State.START, State.INIT_PROMPT, '"Hi, do you play video games?"')
 df.add_user_transition(State.INIT_PROMPT, State.QUES1, "[$device=#ONT(yes)]")
-df.add_user_transition(State.INIT_PROMPT, State.QUES1_1, "{$device=#ONT(no)], }")
+df.add_user_transition(State.INIT_PROMPT, State.QUES1b, "[$device=#ONT(no)]")
 
-df.add_system_transition(State.QUES1_1, State.ERR, "I'm sorry to hear that, I'm afraid we can't be friends then.")
+df.add_system_transition(State.QUES1b, State.ERR, "I'm sorry to hear that, I'm afraid we can't be friends then.")
 df.add_system_transition(State.QUES1, State.ANS1, '"What do you most often play video games on?"')
 df.add_user_transition(State.ANS1, State.ATARI, "[$device=#ONT(atari)]")
 df.add_user_transition(State.ANS1, State.PLAYSTATION, "[$device={#ONT(playstation),playstation}]")
@@ -217,11 +219,11 @@ df.add_system_transition(State.XBOX, State.QUES2, '"Is there anything you like a
 df.add_system_transition(State.PC, State.QUES2, '"Is there anything you like about gaming with a PC?"')
 df.add_system_transition(State.SEGA, State.QUES2, '"Is there anything you like about using a Sega device?"')
 
-df.add_user_transition(State.QUES2, State.ANS2, "[{no,not really,nah}]")
-df.add_user_transition(State.QUES2, State.QUES3, "[-{no,not really,nah}]")
+df.add_user_transition(State.QUES2, State.ANS2, "[$device=#ONT(no)]")
+df.add_user_transition(State.QUES2, State.QUES3, "[-{$device=#ONT(no)}]")
 df.add_system_transition(State.ANS2, State.ANS3, "well do you at least have a favorite game to play on your $device #SYSTEM_FAV")
 
-df.add_system_transition(State.QUES3,State.ANS3, "whats your favorite game to play on your $device #SYSTEM_FAV")
+df.add_system_transition(State.QUES3, State.ANS3, "whats your favorite game to play on your $device #SYSTEM_FAV")
 
 # TODO: FIGURE OUT HOW TO ASSIGN VARIABLE DIRECTLY TO INPUT TEXT, OR HOW TO RECEIVE THE GAME INPUT
 df.add_user_transition(State.ANS3,State.QUES4,"$fav_game=[-{none,dont have one}]")
