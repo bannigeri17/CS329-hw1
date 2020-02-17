@@ -1,4 +1,4 @@
-# Test class for videogame.py
+# Test class for videogames.py
 
 import videogames as v
 
