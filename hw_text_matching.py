@@ -44,7 +44,6 @@ console_brands = {
     "advance":"nintendo",
     "gameboy":"nintendo",
     "3ds":"nintendo",
-    "wii": "nintendo",
     "color":"nintendo",
     "2ds":"nintendo",
     "dsi":"nintendo",
