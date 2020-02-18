@@ -98,10 +98,28 @@ class RECOMMEND_GAME(Macro):
         if 'genre' in vars:
             g = vars['genre']
 
-        name, console, genre = videogames.get_random_game_from_genre(console_name=v, genre=g, sales_min=10)
+        name = None
+        i = 0
+
+        while (name in already_recommended or name is None) and i<100:
+            name, console, genre = videogames.get_random_game_from_genre(console_name=v, genre=g, sales_min=10)
+            i += 1
+            already_recommended.add(name)
+            vars['recommendation'] = name
         if not name:
             return f"I don't really have a decent game to recommend for the {v}"
         return f"{name} is a good {genre.lower()} game for the {console}"
+
+class GAME_DETAILS(Macro):
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+        d = vars['device']
+        if 'recommendation' in vars:
+            r = vars['recommendation']
+            sales_df = videogames.get_sales_for_game(r)
+            sales_total = sales_df.get_value(0,'Global_Sales')
+            rel_year = videogames.get_game_release_year(r)
+            return f"{r} has been sold for the {d} since {rel_year}, and has produced a global revenue of ${sales_total} million!"
+
 
 class PLATFORM_BRAND(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
@@ -242,12 +260,15 @@ df.add_system_transition(State.QUES4, State.ANS4, "#FAV_GAME_GENRE")
 
 df.add_user_transition(State.ANS4, State.QUES5, "")
 
-df.add_system_transition(State.QUES6, State.ANS6, 'Do you want to learn more about the recommended game, a different recommendation or a console recommendation?')
+df.add_system_transition(State.QUES6, State.ANS6, 'Do you want to learn more about $recommendation , a different recommendation or a console recommendation?')
 
 df.add_user_transition(State.ANS6, State.QUES6b, '[more]')
 df.add_user_transition(State.ANS6, State.QUES6c, '[different,game]')
 df.add_user_transition(State.ANS6, State.QUES6d, '[console]')
 
+df.add_system_transition(State.QUES6b,State.ANS6,'#GAME_DETAILS')
+df.add_system_transition(State.QUES6c,State.ANS6,'#RECOMMEND_GAME')
+df.add_system_transition(State.QUES6d,State.ANS6,'#RECOMMEND_CONSOLE')
 
 df.add_system_transition(State.QUES7,State.ANS7, '"Do you like $recommendation ?"')
 df.add_user_transition(State.ANS7, State.QUES8, "#ONT(yes)")
