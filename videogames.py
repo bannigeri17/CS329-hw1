@@ -11,6 +11,12 @@ def get_game_count(console_name: str) -> int:
     c = df.groupby('Platform')
     return c['Name'].count()[console_name]
 
+def get_game_genre(game_name: str) -> str:
+    """
+    Get the genre of a given game
+
+    """
+    return df.loc[df['Name'] == game_name][['Name','Genre']]
 
 def get_console_game_sales(console_name: str) -> float:
     """
