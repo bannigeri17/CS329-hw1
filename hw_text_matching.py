@@ -59,6 +59,35 @@ console_brands = {
     "desktop":"pc"
 }
 
+console_recs = {
+    #kind of arbitrary logic here, mostly just recommend switch unless a more recent console within that brand exists
+    "2600":"switch",
+    "ps2":"ps4",
+    "ps3":"ps4",
+    "ps4":"psp",
+    "psp":"ps4",
+    "switch":"pc",
+    "nes":"switch",
+    "snes":"switch",
+    "ds":"switch",
+    "n64":"switch",
+    "wii":"switch",
+    "advance":"switch",
+    "gameboy":"switch",
+    "3ds":"switch",
+    "color":"switch",
+    "2ds":"switch",
+    "dsi":"switch",
+    "360":"one",
+    "one":"pc",
+    "genesis":"switch",
+    "dreamcast":"switch",
+    "megadrive":"switch",
+    "computer":"switch",
+    "laptop":"switch",
+    "desktop":"switch"
+}
+
 def get_brand(console_name:str) -> str:
     return console_brands[console_name] if console_brands[console_name] != "pc" else None
 
@@ -118,7 +147,15 @@ class GAME_DETAILS(Macro):
             sales_df = videogames.get_sales_for_game(r)
             sales_total = sales_df.get_value(0,'Global_Sales')
             rel_year = videogames.get_game_release_year(r)
-            return f"{r} has been sold for the {d} since {rel_year}, and has produced a global revenue of ${sales_total} million!"
+            return f"{r} has been sold for the {d} since {rel_year}, and has produced a global revenue of ${sales_total} million!\n Do you want a new recommendation or a console recommendation?"
+
+class CONSOLE_RECOMMEND(Macro):
+
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+        if 'device' in vars:
+            new_d = console_recs(vars['device'])
+            vars['device'] = new_d
+            return f"I recommend the {new_d}!\nWhat's your favorite game to play on the {new_d}?"
 
 
 class PLATFORM_BRAND(Macro):
@@ -268,7 +305,7 @@ df.add_user_transition(State.ANS6, State.QUES6d, '[console]')
 
 df.add_system_transition(State.QUES6b,State.ANS6,'#GAME_DETAILS')
 df.add_system_transition(State.QUES6c,State.ANS6,'#RECOMMEND_GAME')
-df.add_system_transition(State.QUES6d,State.ANS6,'#RECOMMEND_CONSOLE')
+df.add_system_transition(State.QUES6d,State.ANS3,'#RECOMMEND_CONSOLE')
 
 df.add_system_transition(State.QUES7,State.ANS7, '"Do you like $recommendation ?"')
 df.add_user_transition(State.ANS7, State.QUES8, "#ONT(yes)")
