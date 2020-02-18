@@ -15,6 +15,8 @@ sys_favs = {}
 genre_favs = {}
 # genre = None
 
+already_recommended = {}
+
 console_dict = {  # mapping the names we match for in our program to their equivalent encoding in vgsales.csv
     'gameboy': 'gb',
     '360': 'x360',
@@ -57,8 +59,8 @@ console_brands = {
     "desktop":"pc"
 }
 
-def get_brand(game_name:str) -> str:
-    return console_brands[game_name] if console_brands[game_name] != "pc" else None
+def get_brand(console_name:str) -> str:
+    return console_brands[console_name] if console_brands[console_name] != "pc" else None
 
 with open("vgsales.csv", newline='') as csvfile:
     file_reader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -101,17 +103,22 @@ class RECOMMEND_GAME(Macro):
             return f"I don't really have a decent game to recommend for the {v}"
         return f"{name} is a good {genre.lower()} game for the {console}"
 
+class PLATFORM_BRAND(Macro):
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+        if 'device' in vars:
+            vars['brand'] = get_brand(vars['device'])
+            if vars['brand'] is not None:
+                return f"{vars['device']} is a {vars['brand']} device!"
 
 class FAV_GAME_GENRE(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         if 'fav_game' in vars:
-            print(vars['fav_game'])
+            #print(vars['fav_game'])
             if vars['fav_game'] in vg_dict:
                 genre = vg_dict['fav_game']
                 vars['genre'] = genre
-                print("genre: " + genre)
+                #print("genre: " + genre)
                 return "Do you prefer " + genre + "games?"
-            return "Do you have a favorite genre?"
 
 
 class State(Enum):
@@ -156,6 +163,8 @@ class State(Enum):
     QUES5 = auto()  # What do you like about $genre games?
     ANS5 = auto()
 
+    QUES6 = auto() # What
+
     ERR = auto()
 
     QUES1b = auto()
@@ -175,7 +184,8 @@ knowledge.load_json(ontology)
 df = DialogueFlow(State.START, initial_speaker=DialogueFlow.Speaker.SYSTEM, kb=knowledge,
                   macros={"SYSTEM_FAV": SYSTEM_FAV(),
                           "FAV_GAME_GENRE": FAV_GAME_GENRE(),
-                          "RECOMMEND_GAME":RECOMMEND_GAME()})
+                          "RECOMMEND_GAME":RECOMMEND_GAME(),
+                          "PLATFORM_BRAND":PLATFORM_BRAND()})
 
 # First Question
 df.add_system_transition(State.START, State.INIT_PROMPT, '"Hi, do you play video games?"')
@@ -193,8 +203,8 @@ df.add_system_transition(State.QUES1c, State.INIT_PROMPT, '"Sorry. I didn\'t cat
                                                           'can you rephrase your answer?"')
 
 # Device
-df.add_user_transition(State.ANS1, State.QUES2, "[$device={#ONT(playstation), #ONT(sega), #ONT(ds), #ONT(gameboy)"
-                                                ", #ONT(nintendo), #ONT(xbox), #ONT(pc)}]")
+df.add_user_transition(State.ANS1, State.QUES2, "$device=[{gameboy,wii}]")
+#"[$device={#ONT(playstation), #ONT(sega), #ONT(ds), #ONT(gameboy), #ONT(nintendo), #ONT(xbox), #ONT(pc)}]"
 df.add_user_transition(State.ANS1, State.ATARI, "[{#ONT(atari)}]")
 
 df.set_error_successor(State.ANS1, State.UNKNOWN_CONSOLE)
@@ -207,7 +217,7 @@ df.set_error_successor(State.ATARI_ANS, State.UNKNOWN_CONSOLE)
 
 
 # Question 3
-df.add_system_transition(State.QUES2, State.ANS2, '"Is there anything you like about using $device ?"')
+df.add_system_transition(State.QUES2, State.ANS2, '"#PLATFORM_BRAND Is there anything you like about using device ?"')
 
 df.add_user_transition(State.ANS2, State.QUES3b, "[#ONT(no)]")
 df.add_user_transition(State.ANS2, State.QUES3, "[#ONT(yes)]")
@@ -230,8 +240,22 @@ df.add_system_transition(State.QUES3c, State.QUES3b, 'Great, please tell me')
 df.add_system_transition(State.ANS3c, State.QUES4, "#RECOMMEND_GAME")
 df.add_system_transition(State.QUES4, State.ANS4, "#FAV_GAME_GENRE")
 
-# df.add_user_transition(State.ANS4, State.QUES5, "")
+df.add_user_transition(State.ANS4, State.QUES5, "")
 
+df.add_system_transition(State.QUES6, State.ANS6, 'Do you want to learn more about the recommended game, a different recommendation or a console recommendation?')
+
+df.add_user_transition(State.ANS6, State.QUES6b, '[more]')
+df.add_user_transition(State.ANS6, State.QUES6c, '[different,game]')
+df.add_user_transition(State.ANS6, State.QUES6d, '[console]')
+
+
+df.add_system_transition(State.QUES7,State.ANS7, '"Do you like $recommendation ?"')
+df.add_user_transition(State.ANS7, State.QUES8, "#ONT(yes)")
+df.add_user_transition(State.ANS7, State.QUES6, '#ONT(no)')
+
+df.add_system_transition(State.QUES8,State.ANS8, "What do you like about $recommendation ?")
+
+df.add_user_transition(State.ANS8, State.END, "/.*/")
 
 df.add_user_transition(State.LOOPBACK, State.START, "/.*/")
 # Error transitions
