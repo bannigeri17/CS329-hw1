@@ -12,4 +12,5 @@ if __name__ == '__main__':
     # for i in range(20):
     #     print(v.get_random_game_from_genre())
     s = json.loads(open('gaming_ontology.json').read())
+    print(v.get_game_genre("Mario Kart Wii"))
     print(s)

@@ -29,6 +29,39 @@ console_dict = {  # mapping the names we match for in our program to their equiv
     'dreamcast': 'dc'
 }
 
+console_brands = {
+    "2600":"atari",
+    "ps2":"playstation",
+    "ps3":"playstation",
+    "ps4":"playstation",
+    "psp":"playstation",
+    "switch":"nintendo",
+    "nes":"nintendo",
+    "snes":"nintendo",
+    "ds":"nintendo",
+    "n64":"nintendo",
+    "wii":"nintendo",
+    "advance":"nintendo",
+    "gameboy":"nintendo",
+    "3ds":"nintendo",
+    "wii": "nintendo",
+    "color":"nintendo",
+    "2ds":"nintendo",
+    "dsi":"nintendo",
+    "360":"xbox",
+    "one":"xbox",
+    "genesis":"sega",
+    "dreamcast":"sega",
+    "megadrive":"sega",
+    "computer":"pc",
+    "laptop":"pc",
+    "desktop":"pc"
+}
+
+def get_brand(game_name:str) -> str:
+    return console_brands[game_name] if console_brands[game_name] != "pc" else None
+
+
 with open("vgsales.csv", newline='') as csvfile:
     file_reader = csv.reader(csvfile, delimiter=',', quotechar='"')
     for row in file_reader:
