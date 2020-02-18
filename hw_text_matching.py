@@ -44,7 +44,6 @@ console_brands = {
     "advance":"nintendo",
     "gameboy":"nintendo",
     "3ds":"nintendo",
-    "wii": "nintendo",
     "color":"nintendo",
     "2ds":"nintendo",
     "dsi":"nintendo",
@@ -75,6 +74,7 @@ with open("vgsales.csv", newline='') as csvfile:
 
 
 # print(sys_favs)
+print('')
 
 
 class SYSTEM_FAV(Macro):
@@ -114,7 +114,6 @@ class FAV_GAME_GENRE(Macro):
             return "Do you have a favorite genre?"
 
 
-# TODO: Update the State enum as needed
 class State(Enum):
     START = 0
     INIT_PROMPT = auto()
@@ -136,6 +135,8 @@ class State(Enum):
     GENESIS = auto()  # not sure if we need to handle any cases here
     DS_ANS = auto()
     GAMEBOY_ANS = auto()
+    XBOX_ANS = auto()
+    ATARI_ANS = auto()
 
     QUES2 = auto()  # Is there anything you like about using a $brand device?
     ANS2 = auto()
@@ -158,10 +159,13 @@ class State(Enum):
     ERR = auto()
 
     QUES1b = auto()
+    QUES1c = auto()
     RECOMMEND = auto()
     # Error handling
     UNKNOWN_ANS = auto()
     WHATEV = auto()
+    UNKNOWN_CONSOLE = auto()
+    LOOPBACK = auto()
 
 
 ontology = json.loads(open('gaming_ontology.json').read())
@@ -173,42 +177,43 @@ df = DialogueFlow(State.START, initial_speaker=DialogueFlow.Speaker.SYSTEM, kb=k
                           "FAV_GAME_GENRE": FAV_GAME_GENRE(),
                           "RECOMMEND_GAME":RECOMMEND_GAME()})
 
+# First Question
 df.add_system_transition(State.START, State.INIT_PROMPT, '"Hi, do you play video games?"')
+
+# Three possible answers from user
 df.add_user_transition(State.INIT_PROMPT, State.QUES1a, "[#ONT(yes)]")
 df.add_user_transition(State.INIT_PROMPT, State.QUES1b, "[#ONT(no)]")
+df.set_error_successor(State.INIT_PROMPT, State.QUES1c)
 
+# Question 1: System can handle in 3 possible ways
 df.add_system_transition(State.QUES1a, State.ANS1, '"What do you most often play video games on?"')
-df.add_system_transition(State.QUES1b, State.ERR, "I am sorry to hear that. I am afraid we cannot be friends then.")
+df.add_system_transition(State.QUES1b, State.LOOPBACK, '"I am sorry to hear that. '
+                                                       'I am afraid we cannot be friends then."')
+df.add_system_transition(State.QUES1c, State.INIT_PROMPT, '"Sorry. I didn\'t catch that, '
+                                                          'can you rephrase your answer?"')
 
-df.add_user_transition(State.ANS1, State.ATARI, "[$device=#ONT(atari)]")
-df.add_user_transition(State.ANS1, State.PLAYSTATION, "[$device={#ONT(playstation),playstation}]")
-df.add_user_transition(State.ANS1, State.DS, "[$device={#ONT(ds),ds}]")
-df.add_user_transition(State.ANS1, State.GAMEBOY, "[$device={#ONT(gameboy),gameboy}]")
-df.add_user_transition(State.ANS1, State.NINTENDO, "[$device=#ONT(nintendo)]")
-df.add_user_transition(State.ANS1, State.XBOX, "[$device={#ONT(xbox),xbox}]")
-df.add_user_transition(State.ANS1, State.PC, "[$device=#ONT(pc)]")
-df.add_user_transition(State.ANS1, State.SEGA, "[$device=#ONT(sega)]")
-df.add_user_transition(State.ANS1, State.UNNAMED_CONSOLE, "[$device=[console]]")
+# Device
+df.add_user_transition(State.ANS1, State.QUES2, "[$device={#ONT(playstation), #ONT(sega), #ONT(ds), #ONT(gameboy)"
+                                                ", #ONT(nintendo), #ONT(xbox), #ONT(pc)}]")
+df.add_user_transition(State.ANS1, State.ATARI, "[{#ONT(atari)}]")
 
-df.add_system_transition(State.UNNAMED_CONSOLE, State.ANS1, '"What kind of console do you have?"')
-df.add_system_transition(State.DS, State.DS_ANS, '"What kind of DS do you have?"')
-df.add_user_transition(State.DS_ANS, State.NINTENDO, '"[$device=#ONT(ds)]"')
-df.add_system_transition(State.GAMEBOY, State.GAMEBOY_ANS, '"What kind of Gameboy do you have?"')
-df.add_user_transition(State.GAMEBOY_ANS, State.NINTENDO, '"[$device = #ONT(gameboy)]"')
+df.set_error_successor(State.ANS1, State.UNKNOWN_CONSOLE)
+df.add_system_transition(State.UNKNOWN_CONSOLE, State.ANS1, '"Sorry. I don\'t know that one. '
+                                                            'Give me the name of one of your game consoles"')
 
-df.add_system_transition(State.ATARI, State.QUES2, '"Is there anything you like about using Atari?"')
-df.add_system_transition(State.PLAYSTATION, State.QUES2,
-                         '"Is there anything you like about using a Playstation console?"')
-df.add_system_transition(State.NINTENDO, State.QUES2, '"Is there anything you like about using a Nintendo device?"')
-df.add_system_transition(State.XBOX, State.QUES2, '"Is there anything you like about using an Xbox console?"')
-df.add_system_transition(State.PC, State.QUES2, '"Is there anything you like about gaming with a PC?"')
-df.add_system_transition(State.SEGA, State.QUES2, '"Is there anything you like about using a Sega device?"')
+df.add_system_transition(State.ATARI, State.ATARI_ANS, '"What model Atari do you have?"')
+df.add_user_transition(State.ATARI_ANS, State.QUES2, '[$device=#ONT(atari)]')
+df.set_error_successor(State.ATARI_ANS, State.UNKNOWN_CONSOLE)
 
-df.add_user_transition(State.QUES2, State.ANS2, "[#ONT(no)]")
-df.add_user_transition(State.QUES2, State.QUES3, "[#ONT(yes)]")
-df.add_system_transition(State.ANS2, State.ANS3, "well do you at least have a favorite game "
+
+# Question 3
+df.add_system_transition(State.QUES2, State.ANS2, '"Is there anything you like about using $device ?"')
+
+df.add_user_transition(State.ANS2, State.QUES3b, "[#ONT(no)]")
+df.add_user_transition(State.ANS2, State.QUES3, "[#ONT(yes)]")
+
+df.add_system_transition(State.QUES3b, State.ANS3, "well do you at least have a favorite game "
                                                  "to play on your $device #SYSTEM_FAV")
-
 df.add_system_transition(State.QUES3, State.ANS3, "whats your favorite game to play on your $device #SYSTEM_FAV")
 
 # TODO: FIGURE OUT HOW TO ASSIGN VARIABLE DIRECTLY TO INPUT TEXT, OR HOW TO RECEIVE THE GAME INPUT
@@ -228,6 +233,7 @@ df.add_system_transition(State.QUES4, State.ANS4, "#FAV_GAME_GENRE")
 # df.add_user_transition(State.ANS4, State.QUES5, "")
 
 
+df.add_user_transition(State.LOOPBACK, State.START, "/.*/")
 # Error transitions
 df.add_system_transition(State.UNKNOWN_ANS, State.WHATEV, "I'm not sure I follow.")
 df.set_error_successor(State.WHATEV, State.START)

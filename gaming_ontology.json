@@ -8,10 +8,18 @@
       "pc",
       "sega"
     ],
+    "ds": [
+      "3ds",
+      "2ds",
+      "dsi",
+      "ds"
+    ],
     "atari": [
+      "atari",
       "2600"
     ],
     "playstation": [
+      "playstation",
       "ps2",
       "ps3",
       "ps4",
@@ -21,12 +29,11 @@
       "switch",
       "nes",
       "snes",
-      "ds",
       "n64",
-      "wii",
-      "gameboy"
+      "wii"
     ],
     "xbox": [
+      "xbox",
       "360",
       "one"
     ],
@@ -36,18 +43,12 @@
       "desktop"
     ],
     "sega": [
-      "genesis",
       "dreamcast"
     ],
     "gameboy": [
+      "gameboy",
       "color",
       "advance"
-    ],
-    "ds": [
-      "3ds",
-      "2ds",
-      "dsi",
-      "ds"
     ],
     "genesis": [
       "genesis",
