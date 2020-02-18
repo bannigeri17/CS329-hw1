@@ -1,7 +1,6 @@
 {
-  "ontology":{
-    "brands":
-    [
+  "ontology": {
+    "brands": [
       "atari",
       "playstation",
       "nintendo",
@@ -12,16 +11,13 @@
     "atari": [
       "2600"
     ],
-    "playstation": 
-    [
-      "ps",
+    "playstation": [
       "ps2",
       "ps3",
       "ps4",
       "psp"
     ],
-    "nintendo":
-    [
+    "nintendo": [
       "switch",
       "nes",
       "snes",
@@ -30,13 +26,11 @@
       "wii",
       "gameboy"
     ],
-    "xbox":
-    [
+    "xbox": [
       "360",
       "one"
     ],
-    "pc":
-    [
+    "pc": [
       "laptop",
       "computer",
       "desktop"
@@ -45,14 +39,11 @@
       "genesis",
       "dreamcast"
     ],
-    "gameboy":
-    [
+    "gameboy": [
       "color",
-      "advance",
-
+      "advance"
     ],
-    "ds":
-    [
+    "ds": [
       "3ds",
       "2ds",
       "dsi",
@@ -61,6 +52,34 @@
     "genesis": [
       "genesis",
       "megadrive"
+    ],
+    "no": [
+      "no",
+      "nah",
+      "never",
+      "no way",
+      "get out",
+      "nope",
+      "not really"
+    ],
+    "yes": [
+      "yes",
+      "yeah",
+      "yea",
+      "sure",
+      "absolutely",
+      "of course",
+      "ye"
+    ],
+    "greetings": [
+      "hi",
+      "hello",
+      "good morning",
+      "good afternoon",
+      "good evening",
+      "hey",
+      "nice to meet you",
+      "good day"
     ]
   }
 }
