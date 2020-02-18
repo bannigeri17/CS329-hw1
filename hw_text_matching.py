@@ -1,8 +1,10 @@
+import csv
+import json
+from enum import Enum, auto
 from typing import Dict, Any, List
 
 from emora_stdm import KnowledgeBase, DialogueFlow, Macro, Ngrams
-from enum import Enum, auto
-import json, csv
+
 import videogames
 
 # a dictionary mapping a game title to various data points about it, i.e. platform, release year and genre
@@ -38,7 +40,9 @@ with open("vgsales.csv", newline='') as csvfile:
         if row[4].lower() not in genre_favs:
             gen_key = row[4].lower()
             genre_favs[gen_key] = row[1].lower()
-print(sys_favs)
+
+
+# print(sys_favs)
 
 
 class SYSTEM_FAV(Macro):
@@ -60,7 +64,7 @@ class RECOMMEND_GAME(Macro):
         if 'genre' in vars:
             g = vars['genre']
 
-        name, console, genre = videogames.get_random_game_from_genre(console_name = v, genre=g, sales_min=10)
+        name, console, genre = videogames.get_random_game_from_genre(console_name=v, genre=g, sales_min=10)
         if not name:
             return f"I don't really have a decent game to recommend for the {v}"
         return f"{name} is a good {genre.lower()} game for the {console}"
@@ -129,7 +133,6 @@ class State(Enum):
 
 
 ontology = json.loads(open('gaming_ontology.json').read())
-
 
 knowledge = KnowledgeBase()
 knowledge.load_json(ontology)
