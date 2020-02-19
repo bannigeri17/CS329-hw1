@@ -118,6 +118,25 @@ class SYSTEM_FAV(Macro):
             return "? I don't really have a favorite for that device."
 
 
+fav_game = None
+
+
+class GET_SYSTEM_FAVORITE_GAME(Macro):
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+        global fav_game
+        if not fav_game:
+            fav_game = videogames.get_random_game_from_genre(sales_min=20)
+        return f"My favorite game is {fav_game[0]}. It's a {fav_game[2]} game for the {fav_game[1]}"
+
+
+class GET_SYSTEM_FAVORITE_GENRE(Macro):
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+        global fav_game
+        if not fav_game:
+            fav_game = videogames.get_random_game_from_genre(sales_min=20)
+        return f'I love {fav_game[2]} games! What genre do you like?'
+
+
 class RECOMMEND_GAME(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         v = None
@@ -139,6 +158,7 @@ class RECOMMEND_GAME(Macro):
             return f"I don't really have a decent game to recommend for the {v}"
         return f"{name} is a good {genre.lower()} game for the {console}"
 
+
 class GAME_DETAILS(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         d = vars['device']
@@ -148,6 +168,7 @@ class GAME_DETAILS(Macro):
             sales_total = sales_df.get_value(0,'Global_Sales')
             rel_year = videogames.get_game_release_year(r)
             return f"{r} has been sold for the {d} since {rel_year}, and has produced a global revenue of ${sales_total} million!\n Do you want a new recommendation or a console recommendation?"
+
 
 class CONSOLE_RECOMMEND(Macro):
 
@@ -164,6 +185,7 @@ class PLATFORM_BRAND(Macro):
             vars['brand'] = get_brand(vars['device'])
             if vars['brand'] is not None:
                 return f"{vars['device']} is a {vars['brand']} device!"
+
 
 class FAV_GAME_GENRE(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
@@ -278,19 +300,25 @@ df.add_user_transition(State.ANS2, State.QUES3b, "[#ONT(no)]")
 df.add_user_transition(State.ANS2, State.QUES3, "[#ONT(yes)]")
 
 df.add_system_transition(State.QUES3b, State.ANS3, "well do you at least have a favorite game "
-                                                 "to play on your $device #SYSTEM_FAV")
+                                                   "to play on your $device #SYSTEM_FAV")
 df.add_system_transition(State.QUES3, State.ANS3, "whats your favorite game to play on your $device #SYSTEM_FAV")
 
 # TODO: FIGURE OUT HOW TO ASSIGN VARIABLE DIRECTLY TO INPUT TEXT, OR HOW TO RECEIVE THE GAME INPUT
-df.add_user_transition(State.ANS3, State.QUES4, "$fav_game=[-{#ONT(no)}]")
+df.add_user_transition(State.ANS3, State.QUES3a, "[what, {you, yours, your}]")
+df.add_user_transition(State.ANS3, State.QUES4, "$fav_game=[-{#ONT(no), what}]")
 df.add_user_transition(State.ANS3, State.QUES3b, "[#ONT(no)]")
+
+df.add_system_transition(State.QUES3a, State.ANS3, "#GET_SYSTEM_FAVORITE_GAME What's yours?")
 
 df.add_system_transition(State.QUES3b, State.ANS3b, '"Do you have a favorite genre of video game?"')
 
+df.add_user_transition(State.ANS3b, State.QUES4b, "<what, {you,yours,your}>")
 df.add_user_transition(State.ANS3b, State.RECOMMEND, "[#ONT(no)]")
 df.add_user_transition(State.ANS3b, State.QUES3c, "[#ONT(yes)]")
-df.add_user_transition(State.ANS3b, State.ANS3c, "$genre=[-{#ONT(no), #ONT(yes)}]")
+df.add_user_transition(State.ANS3b, State.ANS3c, "$genre=[-{[what, {you, yours, your}], #ONT(no), #ONT(yes)}]")
 df.add_system_transition(State.QUES3c, State.QUES3b, 'Great, please tell me')
+
+df.add_system_transition(State.QUES4b, State.ANS3b, "#GET_SYSTEM_FAVORITE_GENRE")
 
 df.add_system_transition(State.ANS3c, State.QUES4, "#RECOMMEND_GAME")
 df.add_system_transition(State.QUES4, State.ANS4, "#FAV_GAME_GENRE")
