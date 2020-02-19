@@ -20,9 +20,15 @@ if __name__ == '__main__':
     print(v.get_best_selling_game('Wii'))
     print(v.get_console_game_time_range('Wii'))
     # for i in range(20):
-    print(v.get_random_game_from_genre())
+    print(v.get_random_game_from_genre(console_name='x360', genre='action'))
     s = json.loads(open('gaming_ontology.json').read())
     print(v.get_game_genre("Mario Kart Wii"))
     print(s)
-    print(get_fav_game())
-    print(get_fav_game())
+    # print(get_fav_game())
+    # print(get_fav_game())
+    sys_favs = {}
+
+    if 'fav_game' not in sys_favs.keys():
+        sys_favs['fav_game'] = v.get_random_game_from_genre(console_name='x360', genre='action')
+    fav_game = sys_favs['fav_game']
+    print(f"My favorite game is {fav_game[0]}. It is a {fav_game[2]} game for the {fav_game[1]}. Whats yours?")
