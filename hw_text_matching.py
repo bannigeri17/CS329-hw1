@@ -15,7 +15,7 @@ sys_favs = {}
 genre_favs = {}
 # genre = None
 
-already_recommended = {}
+already_recommended = set()
 
 console_dict = {  # mapping the names we match for in our program to their equivalent encoding in vgsales.csv
     'gameboy': 'gb',
@@ -120,22 +120,23 @@ class SYSTEM_FAV(Macro):
             return "? I don't really have a favorite for that device."
 
 
-fav_game = None
+
 
 
 class GET_SYSTEM_FAVORITE_GAME(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-        global fav_game
-        if not fav_game:
-            fav_game = videogames.get_random_game_from_genre()
-        return f"My favorite game is {fav_game[0]}. It is a {fav_game[2]} game for the {fav_game[1]}"
+
+        if not sys_favs['fav_game']:
+            sys_favs['fav_game'] = videogames.get_random_game_from_genre()
+            fav_game = sys_favs['fav_game']
+        return f"My favorite game is {fav_game[0]}. It is a {fav_game[2]} game for the {fav_game[1]}. Whats yours?"
 
 
 class GET_SYSTEM_FAVORITE_GENRE(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-        global fav_game
-        if not fav_game:
-            fav_game = videogames.get_random_game_from_genre()
+        if not sys_favs['fav_game']:
+            sys_favs['fav_game'] = videogames.get_random_game_from_genre()
+            fav_game = sys_favs['fav_game']
         return f'I love {fav_game[2]} games! What genre do you like?'
 
 
@@ -152,7 +153,7 @@ class RECOMMEND_GAME(Macro):
         i = 0
 
         while (name in already_recommended or name is None) and i < 100:
-            name, console, genre = videogames.get_random_game_from_genre(console_name=v, genre=g, sales_min=10)
+            name, console, genre = videogames.get_random_game_from_genre(console_name=v, genre=g)
             i += 1
             already_recommended.add(name)
             vars['recommendation'] = name
@@ -241,6 +242,8 @@ class State(Enum):
     QUES4 = auto()  # Do you prefer $genre games?
     ANS4 = auto()
 
+    QUES4d = auto()
+
     QUES5 = auto()  # What do you like about $genre games?
     ANS5 = auto()
 
@@ -325,24 +328,23 @@ df.add_system_transition(State.QUES3, State.ANS3, '"I\'m glad you\'re enjoying y
                                                   '"what\'s your favorite game"'
                                                   '"to play on your" $device #SYSTEM_FAV')
 
-# TODO: FIGURE OUT HOW TO ASSIGN VARIABLE DIRECTLY TO INPUT TEXT, OR HOW TO RECEIVE THE GAME INPUT
 df.add_user_transition(State.ANS3, State.QUES4a, "[what, {you, yours, your}]")
-df.add_user_transition(State.ANS3, State.QUES4, "$fav_game={#ONT(no), -what}")
-df.add_user_transition(State.ANS3, State.QUES3b, "[#ONT(no)]")
+df.add_user_transition(State.ANS3, State.QUES4d, "$fav_game={#ONT(no), -what}")
 
 df.set_error_successor(State.ANS3, State.QUES4c)
 df.add_system_transition(State.QUES4c, State.ANS3, '"Can you say that again? I did not understand"')
 
-df.add_system_transition(State.QUES4a, State.ANS3, '#GET_SYSTEM_FAVORITE_GAME "What\'s yours?"')
+df.add_system_transition(State.QUES4a, State.ANS3, '#GET_SYSTEM_FAVORITE_GAME')
 
-df.add_system_transition(State.QUES3b, State.ANS3b, '"Do you have a favorite genre of video game?"')
+df.add_system_transition(State.QUES4d, State.ANS3b, '"Do you have a favorite genre of video game?"')
 
 df.add_user_transition(State.ANS3b, State.QUES4b, "[what, {you,yours,your}]")
 df.add_user_transition(State.ANS3b, State.RECOMMEND, "[#ONT(no)]")
 df.add_user_transition(State.ANS3b, State.QUES3c, "[#ONT(yes)]")
-df.add_user_transition(State.ANS3b, State.ANS3c, "$genre=[-{[what, {you, yours, your}], #ONT(no), #ONT(yes)}]")
-df.add_system_transition(State.QUES3c, State.QUES3b, 'Great, please tell me')
 
+df.add_system_transition(State.QUES3c, State.ANS3d, 'Great, please tell me')
+df.add_user_transition(State.ANS3d, State.ANS3c, '$genre')
+# TODO fix this Macro
 df.add_system_transition(State.QUES4b, State.ANS3b, "#GET_SYSTEM_FAVORITE_GENRE")
 
 df.add_system_transition(State.ANS3c, State.QUES4, "#RECOMMEND_GAME")
