@@ -81,6 +81,33 @@
       "hey",
       "nice to meet you",
       "good day"
+    ],
+    "negative_response": [
+      "don't like",
+      "do not like",
+      "dislike",
+      "sucks",
+      "bad",
+      "slow",
+      "annoying",
+      "old",
+      "awful",
+      "horrible",
+      "no good",
+      "terrible"
+    ],
+    "positive_response": [
+      "good",
+      "amazing",
+      "terrific",
+      "fast",
+      "new",
+      "great",
+      "fun",
+      "easy",
+      "fabulous",
+      "fantastic",
+      "wonderful"
     ]
   }
 }
