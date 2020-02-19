@@ -184,7 +184,7 @@ class PLATFORM_BRAND(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         if 'device' in vars:
             vars['brand'] = get_brand(vars['device'])
-            if vars['brand'] is not None:
+            if vars['brand']:
                 return f"{vars['device']} is a {vars['brand']} device!"
 
 
@@ -264,6 +264,7 @@ class State(Enum):
     QUES8 = auto()
     ANS8 = auto()
     END = auto()
+    QUES4c = auto()
 
 
 ontology = json.loads(open('gaming_ontology.json').read())
@@ -292,7 +293,7 @@ df.add_system_transition(State.QUES1c, State.INIT_PROMPT, '"Sorry. I didn\'t cat
                                                           'can you rephrase your answer?"')
 
 # Device
-df.add_user_transition(State.ANS1, State.QUES2, "$device=[{gameboy,wii}]")
+df.add_user_transition(State.ANS1, State.QUES2, "$device={gameboy,wii}")
 # "[$device={#ONT(playstation), #ONT(sega), #ONT(ds), #ONT(gameboy), #ONT(nintendo), #ONT(xbox), #ONT(pc)}]"
 df.add_user_transition(State.ANS1, State.ATARI, "[{#ONT(atari)}]")
 
@@ -305,7 +306,7 @@ df.add_user_transition(State.ATARI_ANS, State.QUES2, '[$device=#ONT(atari)]')
 df.set_error_successor(State.ATARI_ANS, State.UNKNOWN_CONSOLE)
 
 # Question 3
-df.add_system_transition(State.QUES2, State.ANS2, '"#PLATFORM_BRAND Is there anything you like about using device ?"')
+df.add_system_transition(State.QUES2, State.ANS2, '#PLATFORM_BRAND "Is there anything you like about using device?"')
 
 df.add_user_transition(State.ANS2, State.QUES3b, "[#ONT(no)]")
 df.add_user_transition(State.ANS2, State.QUES3, "[#ONT(yes)]")
@@ -318,6 +319,9 @@ df.add_system_transition(State.QUES3, State.ANS3, "whats your favorite game to p
 df.add_user_transition(State.ANS3, State.QUES3a, "[what, {you, yours, your}]")
 df.add_user_transition(State.ANS3, State.QUES4, "$fav_game=[-{#ONT(no), what}]")
 df.add_user_transition(State.ANS3, State.QUES3b, "[#ONT(no)]")
+
+df.set_error_successor(State.ANS3, State.QUES4c)
+df.add_system_transition(State.QUES4c, State.ANS3, '"Can you say that again? I did not understand"')
 
 df.add_system_transition(State.QUES3a, State.ANS3, "#GET_SYSTEM_FAVORITE_GAME What's yours?")
 
