@@ -38,6 +38,7 @@
       "one"
     ],
     "pc": [
+      "pc",
       "laptop",
       "computer",
       "desktop"
@@ -83,6 +84,7 @@
       "good day"
     ],
     "negative_response": [
+      "no",
       "don't like",
       "do not like",
       "dislike",
