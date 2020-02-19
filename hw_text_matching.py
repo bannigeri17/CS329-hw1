@@ -306,7 +306,7 @@ df.add_user_transition(State.ATARI_ANS, State.QUES2, '[$device=#ONT(atari)]')
 df.set_error_successor(State.ATARI_ANS, State.UNKNOWN_CONSOLE)
 
 # Question 3
-df.add_system_transition(State.QUES2, State.ANS2, '#PLATFORM_BRAND "Is there anything you like about using device?"')
+df.add_system_transition(State.QUES2, State.ANS2, '#PLATFORM_BRAND "Is there anything you like about using "$device"?"')
 
 df.add_user_transition(State.ANS2, State.QUES3b, "[#ONT(no)]")
 df.add_user_transition(State.ANS2, State.QUES3, "[#ONT(yes)]")
