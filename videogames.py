@@ -41,6 +41,9 @@ def get_best_selling_game(console_name: str) -> (str, float):
     c = c.loc[c['Global_Sales'] == c['Global_Sales'].max()]
     return c[['Name', 'Global_Sales']]
 
+def get_game_release_year(game_name:str) -> (int):
+    c = df.loc[df['Name'] == game_name][['Name', 'Year']]
+    return c.get_value(0,'Year')
 
 def get_console_game_time_range(console_name: str) -> (int, int, int):
     """
