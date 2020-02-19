@@ -56,7 +56,8 @@ console_brands = {
     "megadrive": "sega",
     "computer": "pc",
     "laptop": "pc",
-    "desktop": "pc"
+    "desktop": "pc",
+    "pc": "pc"
 }
 
 console_recs = {
@@ -126,15 +127,15 @@ class GET_SYSTEM_FAVORITE_GAME(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         global fav_game
         if not fav_game:
-            fav_game = videogames.get_random_game_from_genre(sales_min=20)
-        return f"My favorite game is {fav_game[0]}. It's a {fav_game[2]} game for the {fav_game[1]}"
+            fav_game = videogames.get_random_game_from_genre()
+        return f"My favorite game is {fav_game[0]}. It is a {fav_game[2]} game for the {fav_game[1]}"
 
 
 class GET_SYSTEM_FAVORITE_GENRE(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         global fav_game
         if not fav_game:
-            fav_game = videogames.get_random_game_from_genre(sales_min=20)
+            fav_game = videogames.get_random_game_from_genre()
         return f'I love {fav_game[2]} games! What genre do you like?'
 
 
@@ -172,7 +173,6 @@ class GAME_DETAILS(Macro):
 
 
 class CONSOLE_RECOMMEND(Macro):
-
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         if 'device' in vars:
             new_d = console_recs(vars['device'])
@@ -183,9 +183,12 @@ class CONSOLE_RECOMMEND(Macro):
 class PLATFORM_BRAND(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         if 'device' in vars:
-            vars['brand'] = get_brand(vars['device'])
-            if vars['brand']:
-                return f"{vars['device']} is a {vars['brand']} device!"
+            brand = get_brand(vars['device'])
+            if brand:
+                vars['brand'] = brand
+                return f"The {vars['device']} is a {vars['brand']} device!"
+            else:
+                return f"I don't know the brand of this {vars['device']}."
 
 
 class FAV_GAME_GENRE(Macro):
@@ -309,7 +312,7 @@ df.add_user_transition(State.ATARI_ANS, State.QUES2, '[$device=#ONT(atari)]')
 df.set_error_successor(State.ATARI_ANS, State.UNKNOWN_CONSOLE)
 
 # Question 3
-df.add_system_transition(State.QUES2, State.ANS2, '#PLATFORM_BRAND "Is there anything you like about using "$device"?"')
+df.add_system_transition(State.QUES2, State.ANS2, '#PLATFORM_BRAND "Is there anything you like about using a"$device"?"')
 
 df.add_user_transition(State.ANS2, State.QUES3b, "[#ONT(negative_response)]")
 df.add_user_transition(State.ANS2, State.QUES3, "[#ONT(positive_response)]")
@@ -318,19 +321,19 @@ df.add_system_transition(State.ANS2_ERR, State.ANS2, '"Sorry, I didn\'t quite ca
 
 df.add_system_transition(State.QUES3b, State.ANS3, '"I\'m sorry to hear that. do you at least have a favorite game"'
                                                    '"to play on your" $device #SYSTEM_FAV')
-df.add_system_transition(State.QUES3, State.ANS3, '"I\'m glad you\'re enjoying your console! "'
+df.add_system_transition(State.QUES3, State.ANS3, '"I\'m glad you\'re enjoying your "$device"! "'
                                                   '"what\'s your favorite game"'
                                                   '"to play on your" $device #SYSTEM_FAV')
 
 # TODO: FIGURE OUT HOW TO ASSIGN VARIABLE DIRECTLY TO INPUT TEXT, OR HOW TO RECEIVE THE GAME INPUT
 df.add_user_transition(State.ANS3, State.QUES4a, "[what, {you, yours, your}]")
-df.add_user_transition(State.ANS3, State.QUES4, "$fav_game=[-{#ONT(no), what}]")
+df.add_user_transition(State.ANS3, State.QUES4, "$fav_game={#ONT(no), -what}")
 df.add_user_transition(State.ANS3, State.QUES3b, "[#ONT(no)]")
 
 df.set_error_successor(State.ANS3, State.QUES4c)
 df.add_system_transition(State.QUES4c, State.ANS3, '"Can you say that again? I did not understand"')
 
-df.add_system_transition(State.QUES4a, State.ANS3, "#GET_SYSTEM_FAVORITE_GAME What's yours?")
+df.add_system_transition(State.QUES4a, State.ANS3, '#GET_SYSTEM_FAVORITE_GAME "What\'s yours?"')
 
 df.add_system_transition(State.QUES3b, State.ANS3b, '"Do you have a favorite genre of video game?"')
 
