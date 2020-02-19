@@ -161,7 +161,7 @@ class RECOMMEND_GAME(Macro):
             vars['recommendation'] = name
         if not name:
             return f"I don't really have a decent game to recommend for the {v}"
-        return f"{name} is a good {genre.lower()} game for the {console}"
+        return f"{name} is a good {genre.lower()} game for the {console}. Do you like {name}?"
 
 
 class GAME_DETAILS(Macro):
@@ -274,6 +274,7 @@ class State(Enum):
     QUES8 = auto()
     ANS8 = auto()
     END = auto()
+    END2 = auto()
     QUES4c = auto()
     QUES3e = auto()
     ANS2_ERR = auto()
@@ -364,7 +365,7 @@ df.add_user_transition(State.ANS6, State.QUES6c, '[different,game]')
 df.add_user_transition(State.ANS6, State.QUES6d, '[console]')
 
 df.add_system_transition(State.QUES6b, State.ANS6, '#GAME_DETAILS')
-df.add_system_transition(State.QUES6c, State.ANS6, '#RECOMMEND_GAME')
+df.add_system_transition(State.QUES6c, State.ANS7, '#RECOMMEND_GAME')
 df.add_system_transition(State.QUES6d, State.ANS3, '#RECOMMEND_CONSOLE')
 
 df.add_system_transition(State.QUES7, State.ANS7, '"Do you like $recommendation ?"')
@@ -374,6 +375,8 @@ df.add_user_transition(State.ANS7, State.QUES6, '#ONT(no)')
 df.add_system_transition(State.QUES8, State.ANS8, "What do you like about $recommendation ?")
 
 df.add_user_transition(State.ANS8, State.END, "/.*/")
+
+df.add_system_transition(State.END, State.END2, "Thanks for talking to me. Hope you have fun gaming.")
 
 df.add_user_transition(State.LOOPBACK, State.START, "/.*/")
 # Error transitions
