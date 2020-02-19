@@ -121,15 +121,16 @@ class SYSTEM_FAV(Macro):
             return "? I don't really have a favorite for that device."
 
 
-
+class TEST_GENRE(Macro):
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+        print(f'genre is {vars.get("genre", "nonexistent")}')
 
 
 class GET_SYSTEM_FAVORITE_GAME(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-
         if not sys_favs['fav_game']:
             sys_favs['fav_game'] = videogames.get_random_game_from_genre()
-            fav_game = sys_favs['fav_game']
+        fav_game = sys_favs['fav_game']
         return f"My favorite game is {fav_game[0]}. It is a {fav_game[2]} game for the {fav_game[1]}. Whats yours?"
 
 
@@ -137,8 +138,8 @@ class GET_SYSTEM_FAVORITE_GENRE(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         if not sys_favs['fav_game']:
             sys_favs['fav_game'] = videogames.get_random_game_from_genre()
-            fav_game = sys_favs['fav_game']
-        return f'I love {fav_game[2]} games! What genre do you like?'
+        fav_game = sys_favs['fav_game']
+        return f"I love {fav_game[2]} games! What genre do you like?"
 
 
 class RECOMMEND_GAME(Macro):
@@ -242,7 +243,6 @@ class State(Enum):
     ANS3c = auto()
 
     ANS3d = auto()
-
     QUES4 = auto()  # Do you prefer $genre games?
     ANS4 = auto()
 
@@ -350,9 +350,10 @@ df.add_user_transition(State.ANS3b, State.QUES3c, "[#ONT(yes)]")
 df.add_system_transition(State.QUES3c, State.ANS3d, 'Great, please tell me')
 df.add_user_transition(State.ANS3d, State.ANS3c, '$genre = #ONT(genres)')
 # TODO fix this Macro
-df.add_system_transition(State.QUES4b, State.ANS3b, "#GET_SYSTEM_FAVORITE_GENRE")
+df.add_system_transition(State.QUES4b, State.ANS3b, '#GET_SYSTEM_FAVORITE_GENRE')
 
-df.add_system_transition(State.ANS3c, State.QUES4, "#RECOMMEND_GAME")
+df.add_system_transition(State.ANS3c, State.QUES4, '#TEST_GENRE')
+# #RECOMMEND_GAME
 df.add_system_transition(State.QUES4, State.ANS4, "#FAV_GAME_GENRE")
 
 df.add_user_transition(State.ANS4, State.QUES5, "")
