@@ -70,6 +70,6 @@ def get_random_game_from_genre(console_name: str = None, genre: str = None, sale
     if not genre:
         genre = e.sample().reset_index()['Genre'][0]
 
-    name = e.loc[(e['Genre'] == genre) & (e['Global_Sales'] > sales_min)].sample().reset_index()['Name'][0]
+    name = e.loc[(e['Genre'].lower() == genre) & (e['Global_Sales'] > sales_min)].sample().reset_index()['Name'][0]
 
     return name, console_name, genre

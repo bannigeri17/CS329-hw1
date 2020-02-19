@@ -110,6 +110,20 @@
       "fabulous",
       "fantastic",
       "wonderful"
+    ],
+    "genres": [
+      "rpg",
+      "role-playing",
+      "sports",
+      "racing",
+      "shooter",
+      "simulation",
+      "platform",
+      "action",
+      "fighting",
+      "puzzle",
+      "misc",
+      "strategy"
     ]
   }
 }

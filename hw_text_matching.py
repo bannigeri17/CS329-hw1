@@ -28,7 +28,8 @@ console_dict = {  # mapping the names we match for in our program to their equiv
     'xbox': 'xb',
     'one': 'xone',
     'genesis': 'gen',
-    'dreamcast': 'dc'
+    'dreamcast': 'dc',
+    'rpg':'role-playing'
 }
 
 console_brands = {
@@ -148,7 +149,8 @@ class RECOMMEND_GAME(Macro):
             v = vars['device']
         if 'genre' in vars:
             g = vars['genre']
-
+            if g in console_dict:
+                g = console_dict[g]
         name = None
         i = 0
 
@@ -238,6 +240,8 @@ class State(Enum):
 
     QUES3c = auto()
     ANS3c = auto()
+
+    ANS3d = auto()
 
     QUES4 = auto()  # Do you prefer $genre games?
     ANS4 = auto()
@@ -343,7 +347,7 @@ df.add_user_transition(State.ANS3b, State.RECOMMEND, "[#ONT(no)]")
 df.add_user_transition(State.ANS3b, State.QUES3c, "[#ONT(yes)]")
 
 df.add_system_transition(State.QUES3c, State.ANS3d, 'Great, please tell me')
-df.add_user_transition(State.ANS3d, State.ANS3c, '$genre')
+df.add_user_transition(State.ANS3d, State.ANS3c, '$genre = #ONT(genres)')
 # TODO fix this Macro
 df.add_system_transition(State.QUES4b, State.ANS3b, "#GET_SYSTEM_FAVORITE_GENRE")
 
