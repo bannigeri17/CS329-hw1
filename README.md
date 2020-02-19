@@ -1,3 +1,3 @@
 # CS329-hw1: Chatbot
 
-This project uses an ontology of **video game consoles**, created by yours truly
+This project uses an ontology of **video game consoles**
